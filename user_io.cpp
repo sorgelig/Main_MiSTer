@@ -43,6 +43,9 @@
 #include "scaler.h"
 #include "support.h"
 
+sd_service_t sd_service = nullptr;
+void (*core_poll)() = nullptr;
+
 static char core_path[1024] = {};
 static char rbf_path[1024] = {};
 
@@ -290,7 +293,17 @@ char is_neogeo_cd() {
 // NeXTcube ("NeXT") & NeXTstation Turbo ("NeXT-Color") share HPS-side services
 char is_next()
 {
-	return !strcasecmp(orig_name, "NeXT") || !strcasecmp(orig_name, "NeXT-Color");
+	static int type = 0;
+	if (!type)
+	{
+		type = (!strcasecmp(orig_name, "NeXT") || !strcasecmp(orig_name, "NeXT-Color")) ? 1 : 2;
+		if (type == 1)
+		{
+			sd_service = next_sd_service;
+			core_poll = next_enet_poll;
+		}
+	}
+	return type == 1;
 }
 
 // Guests that read the battery clock as UTC and apply their own time zone
@@ -302,7 +315,13 @@ static char rtc_is_utc()
 
 char is_falcon()
 {
-	return !strcasecmp(orig_name, "Falcon");
+	static int type = 0;
+	if (!type)
+	{
+		type = !strcasecmp(orig_name, "Falcon") ? 1 : 2;
+		if (type == 1) sd_service = falcon_sd_service;
+	}
+	return type == 1;
 }
 
 static int is_minimig_type = 0;
@@ -425,7 +444,11 @@ char is_cdi()
 static int is_st_type = 0;
 char is_st()
 {
-	if (!is_st_type) is_st_type = strcasecmp(orig_name, "AtariST") ? 2 : 1;
+	if (!is_st_type)
+	{
+		is_st_type = strcasecmp(orig_name, "AtariST") ? 2 : 1;
+		if (is_st_type == 1) sd_service = st_fdd_sd_service;
+	}
 	return (is_st_type == 1);
 }
 
@@ -439,7 +462,11 @@ char is_electron()
 static int is_marty_type = 0;
 char is_marty()
 {
-	if (!is_marty_type) is_marty_type = strcasecmp(orig_name, "Marty") ? 2 : 1;
+	if (!is_marty_type)
+	{
+		is_marty_type = strcasecmp(orig_name, "Marty") ? 2 : 1;
+		if (is_marty_type == 1) sd_service = marty_sd_service;
+	}
 	return (is_marty_type == 1);
 }
 
@@ -453,7 +480,11 @@ char is_videobrain()
 static int is_pcfx_type = 0;
 char is_pcfx()
 {
-	if (!is_pcfx_type) is_pcfx_type = strcasecmp(orig_name, "PCFX") ? 2 : 1;
+	if (!is_pcfx_type)
+	{
+		is_pcfx_type = strcasecmp(orig_name, "PCFX") ? 2 : 1;
+		if (is_pcfx_type == 1) sd_service = pcfx_sd_service;
+	}
 	return (is_pcfx_type == 1);
 }
 
@@ -1592,6 +1623,22 @@ void user_io_init(const char *path, const char *xml)
 		user_io_read_core_name();
 		printf("Using default MRA: %s\n", xml);
 	}
+
+	is_mac_scsi_family();
+	is_next();
+	is_sun_family();
+	is_hp9k_family();
+	is_ibmrs6k();
+	is_sgi_family();
+	is_decalpha();
+	is_marty();
+	is_pcfx();
+	is_apple3();
+	is_pc88();
+	is_st();
+	is_falcon();
+	is_3b1();
+	is_iigs();
 
 	if (cfg.log_file_entry) MakeFile("/tmp/STARTPATH", core_path);
 
@@ -3386,12 +3433,7 @@ void user_io_poll()
 
 	user_io_send_buttons(0);
 
-	mac_poll();   // Mac SCSI family: Toolbox slot announce + deferred CD work
-	sun_poll();   // Sun SCSI family: write-buffer flushes
-	hp9k_poll();
-	ibmrs6k_poll();
-	sgi_poll();
-	decalpha_poll();
+	if (core_poll) core_poll();
 
 	if (is_minimig())
 	{
@@ -3433,14 +3475,6 @@ void user_io_poll()
 		a2065_poll();
 	}
 
-	next_enet_poll();
-	iigs_uthernet2_poll();
-	sun_enet_poll();
-	hp9k_enet_poll();
-	b3_eth_poll();
-	ibmrs6k_enet_poll();
-	sgi_enet_poll();
-	decalpha_enet_poll();
 
 	// The NeXT keeps a battery backed clock that the guest reads at
 	// boot; the one-shot update at core load is not enough if the core
@@ -3573,60 +3607,9 @@ void user_io_poll()
 				else if (op & 1) iigs_read(disk, &sd_image[disk], lba, blks, ack);
 				else break;
 			}
-			else if (int macop = mac_sd_service(disk, &sd_image[disk], op, lba, sz, ack))
+			else if (int result = sd_service ? sd_service(disk, &sd_image[disk], op, lba, sz, ack) : 0)
 			{
-				// Mac Toolbox/CD slots (support/mac); SPI is done by the hook.
-				if (macop < 0) break;
-			}
-			else if (int nxop = next_sd_service(disk, op, (uint32_t)lba, sz, ack))
-			{
-				if (nxop < 0) break;
-			}
-			else if (int sunop = sun_sd_service(disk, &sd_image[disk], op, lba, sz, ack))
-			{
-				// Sun disk write buffer and CD slot (support/sun); SPI is done by the hook.
-				if (sunop < 0) break;
-			}
-			else if (int hpop = hp9k_sd_service(disk, &sd_image[disk], op, lba, sz, ack))
-			{
-				if (hpop < 0) break;
-			}
-			else if (int rsop = ibmrs6k_sd_service(disk, &sd_image[disk], op, lba, sz, ack))
-			{
-				if (rsop < 0) break;
-			}
-			else if (int sgop = sgi_sd_service(disk, &sd_image[disk], op, lba, sz, ack))
-			{
-				if (sgop < 0) break;
-			}
-			else if (int daop = decalpha_sd_service(disk, &sd_image[disk], op, lba, sz, ack))
-			{
-				if (daop < 0) break;
-			}
-			else if (int mop = marty_sd_service(disk, op, (uint32_t)lba, sz, ack))
-			{
-				if (mop < 0) break;
-      }
-			else if (int pop = pcfx_sd_service(disk, op, (uint32_t)lba, sz, ack))
-			{
-				if (pop < 0) break;
-			}
-			else if (int a3op = a3_sd_service(disk, &sd_image[disk], op, lba, sz, ack))
-			{
-				if (a3op < 0) break;
-			}
-			else if (int pc88op = pc88_sd_service(disk, &sd_image[disk], op, lba, sz, ack))
-			{
-				if (pc88op < 0) break;
-			}
-			else if (int stop = st_fdd_sd_service(disk, op, lba, sz, ack))
-			{
-				if (stop < 0) break;
-			}
-			else if (int falop = falcon_sd_service(disk, op, lba, sz, ack))
-			{
-				// Falcon SCSI response windows / translated CD (support/falcon); SPI is done by the hook.
-				if (falop < 0) break;
+				if (result < 0) break;
 			}
 			else if ((blks == G64_BLOCK_COUNT_1541+1 || blks == G64_BLOCK_COUNT_1571+1) && sd_type[disk]==SD_TYPE_C64)
 			{
