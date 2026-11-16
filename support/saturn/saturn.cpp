@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <strings.h>
 #include <inttypes.h>
 
 #include "../../file_io.h"
@@ -355,4 +356,15 @@ void saturn_fill_blanksave(uint8_t *buffer, uint32_t lba)
 	{
 		memset(buffer, 0, 512);
 	}
+}
+
+char is_saturn()
+{
+	static int is_saturn_type = 0;
+	if (!is_saturn_type)
+	{
+		is_saturn_type = strcasecmp(user_io_get_core_name(1), "Saturn") ? 2 : 1;
+		if (is_saturn_type == 1) core_poll = saturn_poll;
+	}
+	return (is_saturn_type == 1);
 }

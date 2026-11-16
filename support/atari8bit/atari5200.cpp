@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <strings.h>
 
 #include "../../hardware.h"
 #include "../../menu.h"
@@ -296,4 +297,15 @@ void atari5200_reset()
 	set_a8bit_reg(REG_CART1_SELECT, 0);
 	atari8bit_dma_zero(SDRAM_BASE + 0x4000, 0x80000);
 	reboot_5200();
+}
+
+char is_atari5200()
+{
+	static int is_atari5200_type = 0;
+	if (!is_atari5200_type)
+	{
+		is_atari5200_type = strcasecmp(user_io_get_core_name(1), "Atari5200") ? 2 : 1;
+		if (is_atari5200_type == 1) core_poll = atari5200_poll;
+	}
+	return (is_atari5200_type == 1);
 }
