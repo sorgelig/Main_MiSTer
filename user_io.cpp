@@ -279,7 +279,11 @@ char is_zx81()
 static int is_neogeo_type = 0;
 char is_neogeo()
 {
-	if (!is_neogeo_type) is_neogeo_type = strcasecmp(orig_name, "neogeo") ? 2 : 1;
+	if (!is_neogeo_type)
+	{
+		is_neogeo_type = strcasecmp(orig_name, "neogeo") ? 2 : 1;
+		if (is_neogeo_type == 1) core_poll = neocd_poll;
+	}
 	return (is_neogeo_type == 1);
 }
 
@@ -324,14 +328,22 @@ char is_falcon()
 static int is_megacd_type = 0;
 char is_megacd()
 {
-	if (!is_megacd_type) is_megacd_type = strcasecmp(orig_name, "MEGACD") ? 2 : 1;
+	if (!is_megacd_type)
+	{
+		is_megacd_type = strcasecmp(orig_name, "MEGACD") ? 2 : 1;
+		if (is_megacd_type == 1) core_poll = mcd_poll;
+	}
 	return (is_megacd_type == 1);
 }
 
 static int is_pce_type = 0;
 char is_pce()
 {
-	if (!is_pce_type) is_pce_type = strcasecmp(orig_name, "TGFX16") ? 2 : 1;
+	if (!is_pce_type)
+	{
+		is_pce_type = strcasecmp(orig_name, "TGFX16") ? 2 : 1;
+		if (is_pce_type == 1) core_poll = pcecd_poll;
+	}
 	return (is_pce_type == 1);
 }
 
@@ -397,28 +409,44 @@ char is_c128()
 static int is_atari800_type = 0;
 char is_atari800()
 {
-	if (!is_atari800_type) is_atari800_type = strcasecmp(orig_name, "Atari800") ? 2 : 1;
+	if (!is_atari800_type)
+	{
+		is_atari800_type = strcasecmp(orig_name, "Atari800") ? 2 : 1;
+		if (is_atari800_type == 1) core_poll = atari800_poll;
+	}
 	return (is_atari800_type == 1);
 }
 
 static int is_atari5200_type = 0;
 char is_atari5200()
 {
-	if (!is_atari5200_type) is_atari5200_type = strcasecmp(orig_name, "Atari5200") ? 2 : 1;
+	if (!is_atari5200_type)
+	{
+		is_atari5200_type = strcasecmp(orig_name, "Atari5200") ? 2 : 1;
+		if (is_atari5200_type == 1) core_poll = atari5200_poll;
+	}
 	return (is_atari5200_type == 1);
 }
 
 static int is_psx_type = 0;
 char is_psx()
 {
-	if (!is_psx_type) is_psx_type = strcasecmp(orig_name, "PSX") ? 2 : 1;
+	if (!is_psx_type)
+	{
+		is_psx_type = strcasecmp(orig_name, "PSX") ? 2 : 1;
+		if (is_psx_type == 1) core_poll = psx_poll;
+	}
 	return (is_psx_type == 1);
 }
 
 static int is_cdi_type = 0;
 char is_cdi()
 {
-	if (!is_cdi_type) is_cdi_type = strcasecmp(orig_name, "CD-i") ? 2 : 1;
+	if (!is_cdi_type)
+	{
+		is_cdi_type = strcasecmp(orig_name, "CD-i") ? 2 : 1;
+		if (is_cdi_type == 1) core_poll = cdi_poll;
+	}
 	return (is_cdi_type == 1);
 }
 
@@ -446,7 +474,11 @@ char is_marty()
 	if (!is_marty_type)
 	{
 		is_marty_type = strcasecmp(orig_name, "Marty") ? 2 : 1;
-		if (is_marty_type == 1) sd_service = marty_sd_service;
+		if (is_marty_type == 1)
+		{
+			sd_service = marty_sd_service;
+			core_poll = marty_poll;
+		}
 	}
 	return (is_marty_type == 1);
 }
@@ -454,7 +486,11 @@ char is_marty()
 static int is_videobrain_type = 0;
 char is_videobrain()
 {
-	if (!is_videobrain_type) is_videobrain_type = strcasecmp(orig_name, "VideoBrain") ? 2 : 1;
+	if (!is_videobrain_type)
+	{
+		is_videobrain_type = strcasecmp(orig_name, "VideoBrain") ? 2 : 1;
+		if (is_videobrain_type == 1) core_poll = videobrain_poll;
+	}
 	return (is_videobrain_type == 1);
 }
 
@@ -464,7 +500,11 @@ char is_pcfx()
 	if (!is_pcfx_type)
 	{
 		is_pcfx_type = strcasecmp(orig_name, "PCFX") ? 2 : 1;
-		if (is_pcfx_type == 1) sd_service = pcfx_sd_service;
+		if (is_pcfx_type == 1)
+		{
+			sd_service = pcfx_sd_service;
+			core_poll = pcfx_poll;
+		}
 	}
 	return (is_pcfx_type == 1);
 }
@@ -472,14 +512,22 @@ char is_pcfx()
 static int is_saturn_type = 0;
 char is_saturn()
 {
-	if (!is_saturn_type) is_saturn_type = strcasecmp(orig_name, "Saturn") ? 2 : 1;
+	if (!is_saturn_type)
+	{
+		is_saturn_type = strcasecmp(orig_name, "Saturn") ? 2 : 1;
+		if (is_saturn_type == 1) core_poll = saturn_poll;
+	}
 	return (is_saturn_type == 1);
 }
 
 static int is_n64_type = 0;
 char is_n64()
 {
-	if (!is_n64_type) is_n64_type = strcasecmp(orig_name, "N64") ? 2 : 1;
+	if (!is_n64_type)
+	{
+		is_n64_type = strcasecmp(orig_name, "N64") ? 2 : 1;
+		if (is_n64_type == 1) core_poll = n64_poll;
+	}
 	return (is_n64_type == 1);
 }
 
@@ -493,7 +541,11 @@ char is_uneon()
 static int is_3do_type = 0;
 char is_3do()
 {
-	if (!is_3do_type) is_3do_type = strcasecmp(orig_name, "3DO") ? 2 : 1;
+	if (!is_3do_type)
+	{
+		is_3do_type = strcasecmp(orig_name, "3DO") ? 2 : 1;
+		if (is_3do_type == 1) core_poll = p3do_poll;
+	}
 	return (is_3do_type == 1);
 }
 
@@ -1619,6 +1671,17 @@ void user_io_init(const char *path, const char *xml)
 	is_falcon();
 	is_3b1();
 	is_iigs();
+	is_neogeo();
+	is_megacd();
+	is_pce();
+	is_saturn();
+	is_videobrain();
+	is_cdi();
+	is_psx();
+	is_n64();
+	is_atari800();
+	is_atari5200();
+	is_3do();
 
 	if (cfg.log_file_entry) MakeFile("/tmp/STARTPATH", core_path);
 
@@ -3966,26 +4029,11 @@ void user_io_poll()
 		diskled_is_on = 0;
 	}
 
-	if (is_megacd()) mcd_poll();
-	if (is_pce()) pcecd_poll();
-	if (is_saturn()) saturn_poll();
-	if (is_marty()) marty_poll();
-	if (is_videobrain()) videobrain_poll();
-	if (is_pcfx()) pcfx_poll();
-	if (is_cdi()) cdi_poll();
-	if (is_psx()) psx_poll();
-	if (is_neogeo_cd()) neocd_poll();
-	if (is_n64()) n64_poll();
-
 	if (is_c64() || is_c128())
 	{
 		uint16_t save_req = spi_uio_cmd(UIO_CHK_UPLOAD);
 		if (save_req) c64_save_cart(save_req >> 8);
 	}
-	if (is_atari800()) atari800_poll();
-	if (is_atari5200()) atari5200_poll();
-	if (is_3do()) p3do_poll();
-
 	process_ss(0);
 
 	if (cfg.hdmi_off)
