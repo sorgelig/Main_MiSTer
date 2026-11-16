@@ -91,6 +91,7 @@
     <ClCompile Include="support\arcade\mra_loader.cpp" />
     <ClCompile Include="support\archie\archie.cpp" />
     <ClCompile Include="support\c64\c64.cpp" />
+    <ClCompile Include="support\core\core_ids.cpp" />
     <ClCompile Include="support\atari800\atari800.cpp" />
     <ClCompile Include="support\chd\mister_chd.cpp" />
     <ClCompile Include="support\megacd\megacd.cpp" />

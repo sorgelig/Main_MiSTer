@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include <strings.h>
 #include <time.h>
 
 #include "../../hardware.h"
@@ -634,4 +635,12 @@ void archie_hdd_mount(char *filename, int idx)
 {
 	memset(config.hdd_img[idx], 0, sizeof(config.hdd_img[idx]));
 	if (hdd_open(idx, filename)) strcpy(config.hdd_img[idx], filename);
+}
+
+char is_archie()
+{
+	static int is_archie_type = 0;
+	if (!is_archie_type) is_archie_type = strcasecmp(user_io_get_core_name(1), "ARCHIE") ? 2 : 1;
+	if (is_archie_type == 1) core_poll = archie_poll;
+	return (is_archie_type == 1);
 }

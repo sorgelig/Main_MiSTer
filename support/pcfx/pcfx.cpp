@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include <strings.h>
 
 #include "../../file_io.h"
 #include "../../user_io.h"
@@ -269,4 +270,19 @@ int pcfx_sd_service(int disk, fileTYPE *, int op, uint64_t lba, int sz, int ack)
 
 	pcfx_cd_read_ahead(lba + sz / PCFX_CD_BLOCK);
 	return 1;
+}
+
+char is_pcfx()
+{
+	static int is_pcfx_type = 0;
+	if (!is_pcfx_type)
+	{
+		is_pcfx_type = strcasecmp(user_io_get_core_name(1), "PCFX") ? 2 : 1;
+		if (is_pcfx_type == 1)
+		{
+			sd_service = pcfx_sd_service;
+			core_poll = pcfx_poll;
+		}
+	}
+	return (is_pcfx_type == 1);
 }
