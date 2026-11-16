@@ -280,8 +280,8 @@ void diskled_on();
 #define DISKLED_OFF void()
 
 char is_menu();
-char user_io_a2_woz_enabled();
 char is_arcade();
+char user_io_a2_woz_enabled();
 
 #define HomeDir(x) user_io_get_core_path(x)
 #define CoreName user_io_get_core_name()

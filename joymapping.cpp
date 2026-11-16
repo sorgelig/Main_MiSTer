@@ -11,13 +11,13 @@ This file contains lookup information on known controllers
 #include "menu.h"
 #include "input.h"
 #include "user_io.h"
-#include "support/psx/psx.h"
 #include "cfg.h"
 #include "hardware.h"
 #include "str_util.h"
 #include "file_io.h"
 #include "osd.h"
 #include "gamecontroller_db.h"
+#include "support.h"
 
 #define DPAD_COUNT 4
 #define CORE_BUTTON_COUNT (32 - DPAD_COUNT)

@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <string.h>
-#include <strings.h>
 
 #include "../../user_io.h"
 #include "../../spi.h"

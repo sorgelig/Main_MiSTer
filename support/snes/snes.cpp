@@ -2,15 +2,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <strings.h>
 #include <inttypes.h>
 #include <limits.h>
 #include <glob.h>
 
 #include "../../file_io.h"
 #include "../../user_io.h"
-#include "snes.h"
 #include "../../spi.h"
+#include "snes.h"
 
 static uint8_t hdr[512];
 

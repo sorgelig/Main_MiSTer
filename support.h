@@ -1,4 +1,3 @@
-#include "support/core/core_ids.h"
 // Minimig support
 #include "support/minimig/minimig.h"
 
@@ -105,3 +104,6 @@
 
 // VideoBrain support
 #include "support/videobrain/videobrain.h"
+
+// cores without consolidated support code
+#include "support/core/core_ids.h"
