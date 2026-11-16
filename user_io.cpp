@@ -206,6 +206,13 @@ char *user_io_get_core_path(const char *suffix, int recheck)
 	return tmp;
 }
 
+// Guests that read the battery clock as UTC and apply their own time zone
+// (UNIX systems); every other guest gets the timestamp in local time.
+static char rtc_is_utc()
+{
+	return is_next() || is_hp9k_family();
+}
+
 static char is_arcade_type = 0;
 char is_arcade()
 {
@@ -219,9 +226,9 @@ char is_menu()
 	return (is_menu_type == 1);
 }
 
-static int is_x86_type = 0;
 char is_x86()
 {
+	static int is_x86_type = 0;
 	if (!is_x86_type)
 	{
 		if (!strcasecmp(orig_name, "AO486") ||
@@ -236,45 +243,44 @@ char is_x86()
 	return (is_x86_type == 1);
 }
 
-static int is_snes_type = 0;
 char is_snes()
 {
+	static int is_snes_type = 0;
 	if (!is_snes_type) is_snes_type = strcasecmp(orig_name, "SNES") ? 2 : 1;
 	return (is_snes_type == 1);
 }
 
-// True if the running core is the Apple //e (confstr name "Apple-II").
-static int is_apple2_type = 0;
 char is_apple2()
 {
+	static int is_apple2_type = 0;
 	if (!is_apple2_type) is_apple2_type = strcasecmp(orig_name, "Apple-II") ? 2 : 1;
 	return (is_apple2_type == 1);
 }
 
-static int is_sgb_type = 0;
 char is_sgb()
 {
+	static int is_sgb_type = 0;
 	if (!is_sgb_type) is_sgb_type = strcasecmp(orig_name, "SGB") ? 2 : 1;
 	return (is_sgb_type == 1);
 }
 
-static int is_cpc_type = 0;
 char is_cpc()
 {
+	static int is_cpc_type = 0;
 	if (!is_cpc_type) is_cpc_type = strcasecmp(orig_name, "amstrad") ? 2 : 1;
 	return (is_cpc_type == 1);
 }
 
-static int is_zx81_type = 0;
 char is_zx81()
 {
+	static int is_zx81_type = 0;
 	if (!is_zx81_type) is_zx81_type = strcasecmp(orig_name, "zx81") ? 2 : 1;
 	return (is_zx81_type == 1);
 }
 
-static int is_neogeo_type = 0;
 char is_neogeo()
 {
+	static int is_neogeo_type = 0;
 	if (!is_neogeo_type)
 	{
 		is_neogeo_type = strcasecmp(orig_name, "neogeo") ? 2 : 1;
@@ -283,7 +289,8 @@ char is_neogeo()
 	return (is_neogeo_type == 1);
 }
 
-char is_neogeo_cd() {
+char is_neogeo_cd()
+{
     return is_neogeo() && neocd_is_en();
 }
 
@@ -303,13 +310,6 @@ char is_next()
 	return type == 1;
 }
 
-// Guests that read the battery clock as UTC and apply their own time zone
-// (UNIX systems); every other guest gets the timestamp in local time.
-static char rtc_is_utc()
-{
-	return is_next() || is_hp9k_family();
-}
-
 char is_falcon()
 {
 	static int type = 0;
@@ -321,9 +321,9 @@ char is_falcon()
 	return type == 1;
 }
 
-static int is_megacd_type = 0;
 char is_megacd()
 {
+	static int is_megacd_type = 0;
 	if (!is_megacd_type)
 	{
 		is_megacd_type = strcasecmp(orig_name, "MEGACD") ? 2 : 1;
@@ -332,9 +332,9 @@ char is_megacd()
 	return (is_megacd_type == 1);
 }
 
-static int is_pce_type = 0;
 char is_pce()
 {
+	static int is_pce_type = 0;
 	if (!is_pce_type)
 	{
 		is_pce_type = strcasecmp(orig_name, "TGFX16") ? 2 : 1;
@@ -343,17 +343,17 @@ char is_pce()
 	return (is_pce_type == 1);
 }
 
-static int is_archie_type = 0;
 char is_archie()
 {
+	static int is_archie_type = 0;
 	if (!is_archie_type) is_archie_type = strcasecmp(orig_name, "ARCHIE") ? 2 : 1;
 	if (is_archie_type == 1) core_poll = archie_poll;
 	return (is_archie_type == 1);
 }
 
-static int is_pcxt_type = 0;
 char is_pcxt()
 {
+	static int is_pcxt_type = 0;
 	if (!is_pcxt_type)
 	{
 		if (!strcasecmp(orig_name, "PCXT") ||
@@ -368,9 +368,9 @@ char is_pcxt()
 	return (is_pcxt_type == 1);
 }
 
-static int is_pcat286_type = 0;
 char is_pcat286()
 {
+	static int is_pcat286_type = 0;
 	if (!is_pcat286_type)
 	{
 		if (!strcasecmp(orig_name, "PCAT-286"))
@@ -381,30 +381,30 @@ char is_pcat286()
 	return (is_pcat286_type == 1);
 }
 
-static int is_gba_type = 0;
 char is_gba()
 {
+	static int is_gba_type = 0;
 	if (!is_gba_type) is_gba_type = strcasecmp(orig_name, "GBA") ? 2 : 1;
 	return (is_gba_type == 1);
 }
 
-static int is_c64_type = 0;
 char is_c64()
 {
+	static int is_c64_type = 0;
 	if (!is_c64_type) is_c64_type = strcasecmp(orig_name, "C64") ? 2 : 1;
 	return (is_c64_type == 1);
 }
 
-static int is_c128_type = 0;
 char is_c128()
 {
+	static int is_c128_type = 0;
 	if (!is_c128_type) is_c128_type = strcasecmp(orig_name, "C128") ? 2 : 1;
 	return (is_c128_type == 1);
 }
 
-static int is_atari800_type = 0;
 char is_atari800()
 {
+	static int is_atari800_type = 0;
 	if (!is_atari800_type)
 	{
 		is_atari800_type = strcasecmp(orig_name, "Atari800") ? 2 : 1;
@@ -413,9 +413,9 @@ char is_atari800()
 	return (is_atari800_type == 1);
 }
 
-static int is_atari5200_type = 0;
 char is_atari5200()
 {
+	static int is_atari5200_type = 0;
 	if (!is_atari5200_type)
 	{
 		is_atari5200_type = strcasecmp(orig_name, "Atari5200") ? 2 : 1;
@@ -424,9 +424,9 @@ char is_atari5200()
 	return (is_atari5200_type == 1);
 }
 
-static int is_psx_type = 0;
 char is_psx()
 {
+	static int is_psx_type = 0;
 	if (!is_psx_type)
 	{
 		is_psx_type = strcasecmp(orig_name, "PSX") ? 2 : 1;
@@ -435,9 +435,9 @@ char is_psx()
 	return (is_psx_type == 1);
 }
 
-static int is_cdi_type = 0;
 char is_cdi()
 {
+	static int is_cdi_type = 0;
 	if (!is_cdi_type)
 	{
 		is_cdi_type = strcasecmp(orig_name, "CD-i") ? 2 : 1;
@@ -446,9 +446,9 @@ char is_cdi()
 	return (is_cdi_type == 1);
 }
 
-static int is_st_type = 0;
 char is_st()
 {
+	static int is_st_type = 0;
 	if (!is_st_type)
 	{
 		is_st_type = strcasecmp(orig_name, "AtariST") ? 2 : 1;
@@ -457,16 +457,16 @@ char is_st()
 	return (is_st_type == 1);
 }
 
-static int is_electron_type = 0;
 char is_electron()
 {
+	static int is_electron_type = 0;
 	if (!is_electron_type) is_electron_type = strcasecmp(orig_name, "AcornElectron") ? 2 : 1;
 	return (is_electron_type == 1);
 }
 
-static int is_marty_type = 0;
 char is_marty()
 {
+	static int is_marty_type = 0;
 	if (!is_marty_type)
 	{
 		is_marty_type = strcasecmp(orig_name, "Marty") ? 2 : 1;
@@ -479,9 +479,9 @@ char is_marty()
 	return (is_marty_type == 1);
 }
 
-static int is_videobrain_type = 0;
 char is_videobrain()
 {
+	static int is_videobrain_type = 0;
 	if (!is_videobrain_type)
 	{
 		is_videobrain_type = strcasecmp(orig_name, "VideoBrain") ? 2 : 1;
@@ -490,9 +490,9 @@ char is_videobrain()
 	return (is_videobrain_type == 1);
 }
 
-static int is_pcfx_type = 0;
 char is_pcfx()
 {
+	static int is_pcfx_type = 0;
 	if (!is_pcfx_type)
 	{
 		is_pcfx_type = strcasecmp(orig_name, "PCFX") ? 2 : 1;
@@ -505,9 +505,9 @@ char is_pcfx()
 	return (is_pcfx_type == 1);
 }
 
-static int is_saturn_type = 0;
 char is_saturn()
 {
+	static int is_saturn_type = 0;
 	if (!is_saturn_type)
 	{
 		is_saturn_type = strcasecmp(orig_name, "Saturn") ? 2 : 1;
@@ -516,9 +516,9 @@ char is_saturn()
 	return (is_saturn_type == 1);
 }
 
-static int is_n64_type = 0;
 char is_n64()
 {
+	static int is_n64_type = 0;
 	if (!is_n64_type)
 	{
 		is_n64_type = strcasecmp(orig_name, "N64") ? 2 : 1;
@@ -527,16 +527,16 @@ char is_n64()
 	return (is_n64_type == 1);
 }
 
-static int is_uneon_type = 0;
 char is_uneon()
 {
+	static int is_uneon_type = 0;
 	if (!is_uneon_type) is_uneon_type = strcasecmp(orig_name, "Uneon") ? 2 : 1;
 	return (is_uneon_type == 1);
 }
 
-static int is_3do_type = 0;
 char is_3do()
 {
+	static int is_3do_type = 0;
 	if (!is_3do_type)
 	{
 		is_3do_type = strcasecmp(orig_name, "3DO") ? 2 : 1;
@@ -557,34 +557,7 @@ char has_menu()
 
 void user_io_read_core_name()
 {
-	is_menu_type = 0;
-	is_x86_type  = 0;
-	is_no_type   = 0;
-	is_snes_type = 0;
-	is_apple2_type = 0;
-	is_sgb_type = 0;
-	is_cpc_type = 0;
-	is_zx81_type = 0;
-	is_neogeo_type = 0;
-	is_megacd_type = 0;
-	is_pce_type = 0;
-	is_archie_type = 0;
-	is_gba_type = 0;
-	is_c64_type = 0;
-	is_c128_type = 0;
-	is_atari800_type = 0;
-	is_atari5200_type = 0;
-	is_psx_type = 0;
-	is_cdi_type = 0;
-	is_st_type = 0;
-	is_pcxt_type = 0;
-	is_electron_type = 0;
-	is_saturn_type = 0;
-	is_marty_type = 0;
-	is_videobrain_type = 0;
-	is_pcfx_type = 0;
-	is_n64_type = 0;
-	is_uneon_type = 0;
+	is_no_type = 0;
 	core_name[0] = 0;
 
 	char *p = user_io_get_confstr(0);
