@@ -40,6 +40,7 @@
 #include "../../shmem.h"
 #include "../../ide.h"
 #include "x86_share.h"
+#include "x86.h"
 
 #define FDD0_BASE   0xF200
 #define FDD1_BASE   0xF300

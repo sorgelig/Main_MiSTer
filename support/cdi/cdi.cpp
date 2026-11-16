@@ -5,7 +5,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <strings.h>
 #include <array>
 #include <assert.h>
 #include <inttypes.h>
@@ -1167,15 +1166,4 @@ void cdi_load_root_nvram()
 {
 	strcpy(last_dir, "games/CD-i");
 	cdi_mount_save(last_dir);
-}
-
-char is_cdi()
-{
-	static int is_cdi_type = 0;
-	if (!is_cdi_type)
-	{
-		is_cdi_type = strcasecmp(user_io_get_core_name(1), "CD-i") ? 2 : 1;
-		if (is_cdi_type == 1) core_poll = cdi_poll;
-	}
-	return (is_cdi_type == 1);
 }

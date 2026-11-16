@@ -11,6 +11,7 @@ This file contains lookup information on known controllers
 #include "menu.h"
 #include "input.h"
 #include "user_io.h"
+#include "support/psx/psx.h"
 #include "cfg.h"
 #include "hardware.h"
 #include "str_util.h"

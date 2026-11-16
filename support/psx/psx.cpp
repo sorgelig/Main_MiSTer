@@ -2,7 +2,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <strings.h>
 #include <inttypes.h>
 
 #include "../../file_io.h"
@@ -810,15 +809,4 @@ void psx_poll()
 void psx_reset()
 {
 	noreset = 0;
-}
-
-char is_psx()
-{
-	static int is_psx_type = 0;
-	if (!is_psx_type)
-	{
-		is_psx_type = strcasecmp(user_io_get_core_name(1), "PSX") ? 2 : 1;
-		if (is_psx_type == 1) core_poll = psx_poll;
-	}
-	return (is_psx_type == 1);
 }

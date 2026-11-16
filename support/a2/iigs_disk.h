@@ -38,4 +38,7 @@ int iigs_sd_service(int disk, fileTYPE *f, int op, uint64_t lba, int sz, int ack
 void iigs_read(int disk, fileTYPE *f, uint64_t lba, uint32_t blks, int ack);
 void iigs_write(int disk, fileTYPE *f, uint64_t lba, int ack);
 
+char is_apple2();
+
+
 #endif // IIGS_DISK_H

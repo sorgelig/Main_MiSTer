@@ -1,3 +1,4 @@
+#include "support/core/core_ids.h"
 // Minimig support
 #include "support/minimig/minimig.h"
 

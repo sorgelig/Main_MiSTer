@@ -4,14 +4,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <strings.h>
 #include <unistd.h>
 #include <sys/stat.h>
 #include <algorithm>
 #include <vector>
 
 #include "../../hardware.h"
-#include "../../user_io.h"
 #include "../../menu.h"
 #include "../../osd.h"
 #include "../../shmem.h"
@@ -3052,14 +3050,3 @@ int n64_rom_tx(const char* name, const unsigned char idx, const uint32_t load_ad
 #pragma pop_macro("NONE")
 #pragma pop_macro("BIG_ENDIAN")
 #pragma pop_macro("LITTLE_ENDIAN")
-
-char is_n64()
-{
-	static int is_n64_type = 0;
-	if (!is_n64_type)
-	{
-		is_n64_type = strcasecmp(user_io_get_core_name(1), "N64") ? 2 : 1;
-		if (is_n64_type == 1) core_poll = n64_poll;
-	}
-	return (is_n64_type == 1);
-}

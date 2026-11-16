@@ -13,6 +13,7 @@
 #include <sys/stat.h>
 
 #include "support/x86/x86.h"
+#include "support/minimig/minimig.h"
 #include "support/vhd/vhdcfg.h"
 #include "support/minimig/minimig_hdd.h"
 #include "support/minimig/minimig_config.h"

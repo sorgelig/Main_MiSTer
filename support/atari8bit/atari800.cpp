@@ -1,7 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include <strings.h>
 #include <time.h>
 
 #include "../../hardware.h"
@@ -2781,14 +2780,4 @@ void atari800_reset()
 	speed_index = 0;
 	uart_init(speeds[speed_index] + 6);
 	reboot_800(1, 0);
-}
-char is_atari800()
-{
-	static int is_atari800_type = 0;
-	if (!is_atari800_type)
-	{
-		is_atari800_type = strcasecmp(user_io_get_core_name(1), "Atari800") ? 2 : 1;
-		if (is_atari800_type == 1) core_poll = atari800_poll;
-	}
-	return (is_atari800_type == 1);
 }

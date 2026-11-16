@@ -1,6 +1,7 @@
 #include <strings.h>
 
 #include "../../user_io.h"
+#include "core_ids.h"
 
 char is_cpc()
 {

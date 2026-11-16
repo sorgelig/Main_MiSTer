@@ -9,6 +9,7 @@
 
 #include "../../file_io.h"
 #include "../../user_io.h"
+#include "snes.h"
 #include "../../spi.h"
 
 static uint8_t hdr[512];

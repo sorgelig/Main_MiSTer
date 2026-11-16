@@ -471,6 +471,9 @@
     <ClInclude Include="recent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="support\core\core_ids.h">
+      <Filter>Header Files\support</Filter>
+    </ClInclude>
     <ClInclude Include="support\c64\c64.h">
       <Filter>Header Files\support</Filter>
     </ClInclude>

@@ -8,6 +8,7 @@
 
 #include "file_io.h"
 #include "user_io.h"
+#include "support/neogeo/neogeocd.h"
 #include "osd.h"
 #include "cfg.h"
 #include "recent.h"
